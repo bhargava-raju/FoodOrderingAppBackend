@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Service
 public class AddressService {
@@ -34,20 +33,25 @@ public class AddressService {
     public AddressEntity saveAddress(
             final AddressEntity addressEntity, final CustomerEntity customerEntity)
             throws SaveAddressException {
-        if (addressEntity.getActive() != null && addressEntity.getLocality() != null && !addressEntity.getLocality().isEmpty() && addressEntity.getCity() != null && !addressEntity.getCity().isEmpty() && addressEntity.getFlatBuilNo() != null
+        if (addressEntity.getActive() != null
+                && addressEntity.getLocality() != null
+                && !addressEntity.getLocality().isEmpty()
+                && addressEntity.getCity() != null
+                && !addressEntity.getCity().isEmpty()
+                && addressEntity.getFlatBuilNo() != null
                 && !addressEntity.getFlatBuilNo().isEmpty()
                 && addressEntity.getPincode() != null
                 && !addressEntity.getPincode().isEmpty()
-                && addressEntity.getState() != null) {
+                && addressEntity.getState() != null)  {
             if (!isValidPinCode(addressEntity.getPincode())) {
                 throw new SaveAddressException("SAR-002", "Invalid pincode");
             }
-            AddressEntity SaveCustomerAddress = addressDao.createCustomerAddress(addressEntity);
+            AddressEntity createdCustomerAddress = addressDao.createCustomerAddress(addressEntity);
             CustomerAddressEntity createdCustomerAddressEntity = new CustomerAddressEntity();
             createdCustomerAddressEntity.setCustomer(customerEntity);
-            createdCustomerAddressEntity.setAddress(SaveCustomerAddress);
+            createdCustomerAddressEntity.setAddress(createdCustomerAddress);
             customerAddressDao.createCustomerAddress(createdCustomerAddressEntity);
-            return SaveCustomerAddress;
+            return createdCustomerAddress;
         } else {
             throw new SaveAddressException("SAR-001", "No field can be empty");
         }
@@ -65,8 +69,15 @@ public class AddressService {
     }
 
     private boolean isValidPinCode(final String pincode) {
-        Pattern digitPattern = Pattern.compile("\\d{6}");
-        return digitPattern.matcher(pincode).matches();
+        if (pincode.length() != 6) {
+            return false;
+        }
+        for (int i = 0; i < pincode.length(); i++) {
+            if (!Character.isDigit(pincode.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
