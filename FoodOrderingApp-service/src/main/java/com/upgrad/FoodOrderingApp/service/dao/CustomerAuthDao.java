@@ -23,4 +23,9 @@ public class CustomerAuthDao {
             return null;
         }
     }
+
+//    -----------------------------------------------
+    public void createCustomerAuthToken(CustomerAuthEntity customerAuthEntity) {
+        entityManager.persist(customerAuthEntity);
+    }
 }

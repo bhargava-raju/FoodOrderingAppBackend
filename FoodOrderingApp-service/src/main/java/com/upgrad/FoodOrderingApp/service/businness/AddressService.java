@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @Service
@@ -49,6 +52,18 @@ public class AddressService {
             throw new SaveAddressException("SAR-001", "No field can be empty");
         }
     }
+
+    //Get Request-To get all save address of customer from DB
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<AddressEntity> getAllAddress(final CustomerEntity customerEntity) {
+        List<AddressEntity> getAddressEntityList = new ArrayList<>();
+        List<CustomerAddressEntity> customerAddressEntityList = addressDao.getCustomerAddressByCustomer(customerEntity);
+        if (customerAddressEntityList != null || !customerAddressEntityList.isEmpty()) {
+            customerAddressEntityList.forEach(customerAddressEntity -> getAddressEntityList.add(customerAddressEntity.getAddress()));
+        }
+        return getAddressEntityList;
+    }
+
     private boolean isValidPinCode(final String pincode) {
         Pattern digitPattern = Pattern.compile("\\d{6}");
         return digitPattern.matcher(pincode).matches();
