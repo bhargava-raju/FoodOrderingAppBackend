@@ -28,4 +28,18 @@ public class AddressDao {
             return null;
         }
     }
+
+    public AddressEntity getAddressByUuid(final String addressUuid) {
+        try {
+            return entityManager.createNamedQuery("getAddressByUuid", AddressEntity.class).setParameter("addressUuid", addressUuid).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    //Method to delete user address from db.
+    public AddressEntity deleteAddress(AddressEntity addressEntity) {
+        entityManager.remove(addressEntity);
+        return addressEntity;
+    }
 }

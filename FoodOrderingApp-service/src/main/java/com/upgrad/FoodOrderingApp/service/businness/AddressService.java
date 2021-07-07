@@ -8,6 +8,7 @@ import com.upgrad.FoodOrderingApp.service.entity.CustomerAddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,8 +75,7 @@ public class AddressService {
         }
         for (int i = 0; i < pincode.length(); i++) {
             if (!Character.isDigit(pincode.charAt(i))) {
-                return false;
-            }
+                return false; }
         }
         return true;
     }
@@ -87,6 +87,27 @@ public class AddressService {
             throw new AddressNotFoundException("ANF-002", "No state by this id");
         }
         return getStateUuid;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public AddressEntity getAddressByUuid(final String addressId, final CustomerEntity customerEntity) throws AddressNotFoundException, AuthorizationFailedException {
+        AddressEntity addressEntity = addressDao.getAddressByUuid(addressId);
+        CustomerAddressEntity customerAddressEntity = customerAddressDao.customerAddressByAddress(addressEntity);
+        if (addressEntity == null) {
+            throw new AddressNotFoundException("ANF-003", "No address by this id)");
+        }
+        if (addressId.isEmpty()) {
+            throw new AddressNotFoundException("ANF-005", "Address id can not be empty");
+        }
+        if (!customerAddressEntity.getCustomer().getUuid().equals(customerEntity.getUuid())) {
+            throw new AuthorizationFailedException("ATHR-004", "You are not authorized to view/update/delete any one else's address");
+        }
+        return addressEntity;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public AddressEntity deleteAddress(final AddressEntity addressEntity) {
+        return addressDao.deleteAddress(addressEntity);
     }
 }
 

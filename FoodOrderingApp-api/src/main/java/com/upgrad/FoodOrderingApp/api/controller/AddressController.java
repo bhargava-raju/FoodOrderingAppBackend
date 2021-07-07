@@ -86,4 +86,19 @@ public class AddressController {
         }
         return new ResponseEntity<AddressListResponse>(addressListResponse, HttpStatus.OK);
     }
+
+    //Method to delete customer save address.
+    @CrossOrigin
+    @RequestMapping(path = "address/{address_id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<DeleteAddressResponse> deleteSavedAddress(@PathVariable("address_id") final String addressId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, AddressNotFoundException {
+
+        final String accessToken = Utility.getAccessTokenFromAuthorization(authorization);
+        CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+        final AddressEntity addressEntity = addressService.getAddressByUuid(addressId, customerEntity);
+        final AddressEntity deletedAddressEntity = new AddressEntity();
+        deletedAddressEntity.setUuid(UUID.randomUUID().toString());
+        final AddressEntity deleteAddress = addressService.deleteAddress(addressEntity);
+        DeleteAddressResponse deleteAddressResponse = new DeleteAddressResponse().id(UUID.fromString(deleteAddress.getUuid())).status("ADDRESS DELETED SUCCESSFULLY");
+        return new ResponseEntity<DeleteAddressResponse>(deleteAddressResponse, HttpStatus.OK);
+    }
 }
