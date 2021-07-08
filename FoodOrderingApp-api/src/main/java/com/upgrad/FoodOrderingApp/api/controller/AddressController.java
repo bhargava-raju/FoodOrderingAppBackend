@@ -101,4 +101,20 @@ public class AddressController {
         DeleteAddressResponse deleteAddressResponse = new DeleteAddressResponse().id(UUID.fromString(deleteAddress.getUuid())).status("ADDRESS DELETED SUCCESSFULLY");
         return new ResponseEntity<DeleteAddressResponse>(deleteAddressResponse, HttpStatus.OK);
     }
+
+    @CrossOrigin
+    @RequestMapping(path = "states", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<StatesListResponse> getAllStates() {
+
+        final StateEntity stateEntity = new StateEntity();
+        final StatesListResponse statesListResponse = new StatesListResponse();
+        stateEntity.setUuid(UUID.randomUUID().toString());
+        final List<StateEntity> statesLists = addressService.getAllStates();
+
+        for (StateEntity stateEntityList : statesLists) {
+            StatesList states = new StatesList().id(UUID.fromString(stateEntityList.getUuid())).stateName(stateEntityList.getStateName());
+            statesListResponse.addStatesItem(states);
+        }
+        return new ResponseEntity<StatesListResponse>(statesListResponse, HttpStatus.OK);
+    }
 }

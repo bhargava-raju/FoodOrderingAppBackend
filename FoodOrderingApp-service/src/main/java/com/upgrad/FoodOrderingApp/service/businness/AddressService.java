@@ -109,5 +109,11 @@ public class AddressService {
     public AddressEntity deleteAddress(final AddressEntity addressEntity) {
         return addressDao.deleteAddress(addressEntity);
     }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<StateEntity> getAllStates() {
+        List<StateEntity> stateEntityList = stateDao.getAllStates();
+        return stateEntityList;
+    }
 }
 
