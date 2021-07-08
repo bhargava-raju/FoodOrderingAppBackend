@@ -47,7 +47,7 @@ public class AddressController {
             addressEntity.setPincode(saveAddressRequest.getPincode());
             addressEntity.setActive(1);
         }
-        StateEntity stateEntity = addressService.getStateUuid(saveAddressRequest.getStateUuid());
+        StateEntity stateEntity = addressService.getStateByUUID(saveAddressRequest.getStateUuid());
         addressEntity.setState(stateEntity);
 
         final AddressEntity saveAddress = addressService.saveAddress(addressEntity, customerEntity);
@@ -94,7 +94,7 @@ public class AddressController {
 
         final String accessToken = Utility.getAccessTokenFromAuthorization(authorization);
         CustomerEntity customerEntity = customerService.getCustomer(accessToken);
-        final AddressEntity addressEntity = addressService.getAddressByUuid(addressId, customerEntity);
+        final AddressEntity addressEntity = addressService.getAddressByUUID(addressId, customerEntity);
         final AddressEntity deletedAddressEntity = new AddressEntity();
         deletedAddressEntity.setUuid(UUID.randomUUID().toString());
         final AddressEntity deleteAddress = addressService.deleteAddress(addressEntity);

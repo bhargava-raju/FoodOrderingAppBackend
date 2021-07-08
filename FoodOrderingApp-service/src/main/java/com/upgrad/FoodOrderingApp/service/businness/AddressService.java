@@ -81,7 +81,7 @@ public class AddressService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public StateEntity getStateUuid(final String stateUuid) throws AddressNotFoundException {
+    public StateEntity getStateByUUID(final String stateUuid) throws AddressNotFoundException {
         StateEntity getStateUuid = stateDao.getStateByUuid(stateUuid);
         if (getStateUuid == null) {
             throw new AddressNotFoundException("ANF-002", "No state by this id");
@@ -90,7 +90,7 @@ public class AddressService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public AddressEntity getAddressByUuid(final String addressId, final CustomerEntity customerEntity) throws AddressNotFoundException, AuthorizationFailedException {
+    public AddressEntity getAddressByUUID(final String addressId, final CustomerEntity customerEntity) throws AddressNotFoundException, AuthorizationFailedException {
         AddressEntity addressEntity = addressDao.getAddressByUuid(addressId);
         CustomerAddressEntity customerAddressEntity = customerAddressDao.customerAddressByAddress(addressEntity);
         if (addressEntity == null) {

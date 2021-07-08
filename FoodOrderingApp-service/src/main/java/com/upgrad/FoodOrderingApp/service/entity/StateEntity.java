@@ -28,9 +28,14 @@ public class StateEntity implements Serializable {
     @Column(name = "uuid", unique = true)
     private String uuid;
 
+    public StateEntity(String uuid, String stateName) {
+        this.uuid = uuid;
+        this.stateName = stateName;
+    }
+
     @Column(name = "state_name")
     @Size(max = 30)
-    private String state_name;
+    private String stateName;
 
     public StateEntity() {
     }
@@ -53,11 +58,11 @@ public class StateEntity implements Serializable {
     }
 
     public String getStateName() {
-        return state_name;
+        return stateName;
     }
 
     public void setStateName(String state_name) {
-        this.state_name = state_name;
+        this.stateName = state_name;
     }
 
     @Override
