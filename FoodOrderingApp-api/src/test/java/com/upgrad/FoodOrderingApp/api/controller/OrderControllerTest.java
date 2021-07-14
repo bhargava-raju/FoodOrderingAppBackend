@@ -4,6 +4,10 @@
 //import com.upgrad.FoodOrderingApp.api.model.CustomerOrderResponse;
 //import com.upgrad.FoodOrderingApp.api.model.ItemQuantity;
 //import com.upgrad.FoodOrderingApp.api.model.SaveOrderRequest;
+
+//import com.upgrad.FoodOrderingApp.service.businness.*;
+//import com.upgrad.FoodOrderingApp.service.entity.*;
+
 //import com.upgrad.FoodOrderingApp.service.exception.*;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
@@ -20,6 +24,9 @@
 //import java.util.Date;
 //import java.util.UUID;
 //
+
+//import static org.junit.Assert.assertEquals;
+
 //import static org.mockito.ArgumentMatchers.anyString;
 //import static org.mockito.Mockito.*;
 //import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -359,7 +366,11 @@
 //                .thenReturn(customerEntity);
 //
 //        final OrderEntity orderEntity = getOrderEntity(customerEntity);
+
+//        when(mockOrderService.getPastOrdersByUser(customerId))
+
 //        when(mockOrderService.getOrdersByCustomers(customerId))
+
 //                .thenReturn(Collections.singletonList(orderEntity));
 //
 //        final String responseString = mockMvc
@@ -378,7 +389,11 @@
 //        assertEquals(customerOrderResponse.getOrders().get(0).getAddress().getState().getId().toString(), orderEntity.getAddress().getState().getUuid());
 //
 //        verify(mockCustomerService, times(1)).getCustomer("database_accesstoken2");
+
+//        verify(mockOrderService, times(1)).getPastOrdersByUser(customerId);
+
 //        verify(mockOrderService, times(1)).getOrdersByCustomers(customerId);
+
 //    }
 //
 //    //This test case passes when you have handled the exception of trying to fetch placed orders if you are not logged in.
@@ -394,7 +409,11 @@
 //                .andExpect(jsonPath("code").value("ATHR-001"));
 //
 //        verify(mockCustomerService, times(1)).getCustomer("invalid_auth");
+
+//        verify(mockOrderService, times(0)).getPastOrdersByUser(anyString());
+
 //        verify(mockOrderService, times(0)).getOrdersByCustomers(anyString());
+
 //    }
 //
 //    //This test case passes when you have handled the exception of trying to fetch placed orders if you are already
@@ -411,7 +430,11 @@
 //                .andExpect(jsonPath("code").value("ATHR-002"));
 //
 //        verify(mockCustomerService, times(1)).getCustomer("invalid_auth");
+
+//        verify(mockOrderService, times(0)).getPastOrdersByUser(anyString());
+
 //        verify(mockOrderService, times(0)).getOrdersByCustomers(anyString());
+
 //    }
 //
 //    //This test case passes when you have handled the exception of trying to fetch placed orders if your session is
@@ -428,7 +451,11 @@
 //                .andExpect(jsonPath("code").value("ATHR-003"));
 //
 //        verify(mockCustomerService, times(1)).getCustomer("invalid_auth");
+
+//        verify(mockOrderService, times(0)).getPastOrdersByUser(anyString());
+
 //        verify(mockOrderService, times(0)).getOrdersByCustomers(anyString());
+
 //    }
 //
 //    // ------------------------------------------ GET /order/coupon/{coupon_name} ------------------------------------------
