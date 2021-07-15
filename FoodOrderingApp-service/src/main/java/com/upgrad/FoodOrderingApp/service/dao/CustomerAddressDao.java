@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
+
 @Repository
 public class CustomerAddressDao {
 
@@ -22,6 +23,7 @@ public class CustomerAddressDao {
     public CustomerAddressEntity customerAddressByAddress(final AddressEntity address) {
         try {
             return entityManager.createNamedQuery("getCustomerAddressByAddress", CustomerAddressEntity.class).setParameter("address", address).getSingleResult();
+
         } catch (NoResultException nre) {
             return null;
         }

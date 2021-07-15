@@ -1,6 +1,7 @@
 package com.upgrad.FoodOrderingApp.service.businness;
 
 
+
 import com.upgrad.FoodOrderingApp.service.dao.CustomerAuthDao;
 
 import com.upgrad.FoodOrderingApp.service.dao.CustomerDao;
@@ -27,8 +28,15 @@ import java.time.ZonedDateTime;
 import java.util.regex.Pattern;
 
 
+
 @Service
 public class CustomerService {
+
+
+    @Autowired private CustomerAuthDao cusAuthDao;
+
+    public CustomerEntity getCustomer(String accessToken) throws AuthorizationFailedException {
+        CustomerAuthEntity customerAuthEntity = cusAuthDao.getCustomerAuthByToken(accessToken);
 
     @Autowired
     private CustomerAuthDao customerAuthDao;
@@ -38,6 +46,7 @@ public class CustomerService {
 
     public CustomerEntity getCustomer(String accessToken) throws AuthorizationFailedException {
         CustomerAuthEntity customerAuthEntity = customerAuthDao.getCustomerAuthByToken(accessToken);
+
         if (customerAuthEntity != null) {
 
             if (customerAuthEntity.getLogoutAt() != null) {
@@ -54,6 +63,8 @@ public class CustomerService {
             throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in.");
         }
     }
+
+
 //    ----------------------
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -317,6 +328,7 @@ public class CustomerService {
         // Calls customerDao to get the access token of the customer from the database
         return customerDao.getCustomerAuthToken(accessToken);
     }
+
 
 
 }

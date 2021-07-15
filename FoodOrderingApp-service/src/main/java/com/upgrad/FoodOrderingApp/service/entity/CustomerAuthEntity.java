@@ -5,6 +5,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -14,6 +19,57 @@ import java.time.ZonedDateTime;
 @Entity
 @Table(name = "customer_auth")
 @NamedQueries({
+
+        @NamedQuery(
+                name = "customerAuthByToken",
+                query = "select c from CustomerAuthEntity c where c.accessToken=:accessToken")
+})
+public class CustomerAuthEntity implements Serializable {
+
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Size(max = 200)
+    @NotNull
+    @Column(name = "uuid")
+    private String uuid;
+
+
+    @Size(max = 500)
+    @Column(name = "access_token")
+    private String accessToken;
+
+    @Column(name = "login_at")
+    private ZonedDateTime loginAt;
+
+    @Column(name = "logout_at")
+    private ZonedDateTime logoutAt;
+
+    @Column(name = "expires_at")
+    private ZonedDateTime expiresAt;
+
+    @ManyToOne
+    @NotNull
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "customer_id")
+    private CustomerEntity customer;
+
+    public CustomerEntity getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(CustomerEntity customerEntity) {
+        this.customer = customerEntity;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+
         @NamedQuery(name = "customerAuthTokenByAccessToken" , query = "select ct from CustomerAuthEntity ct where ct.accessToken=:accessToken"),
         @NamedQuery(name = "customerAuthTokenById" , query = "select ct from CustomerAuthEntity ct where ct.customer=:customer")
 })
@@ -56,6 +112,7 @@ public class CustomerAuthEntity implements Serializable {
     }
 
     public void setId(Long id) {
+
         this.id = id;
     }
 
@@ -67,6 +124,7 @@ public class CustomerAuthEntity implements Serializable {
         this.uuid = uuid;
     }
 
+
     public CustomerEntity getCustomer() {
         return customer;
     }
@@ -74,6 +132,7 @@ public class CustomerAuthEntity implements Serializable {
     public void setCustomer(CustomerEntity customer) {
         this.customer = customer;
     }
+
 
     public String getAccessToken() {
         return accessToken;
@@ -107,4 +166,22 @@ public class CustomerAuthEntity implements Serializable {
         this.expiresAt = expiresAt;
     }
 
+
+    @Override
+    public boolean equals(Object obj) {
+        return new EqualsBuilder().append(this, obj).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(this).hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
 }
+
+}
+
