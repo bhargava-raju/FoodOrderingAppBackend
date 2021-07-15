@@ -7,7 +7,21 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
 import javax.persistence.*;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -15,7 +29,13 @@ import java.io.Serializable;
 @Entity
 @Table(name = "address")
 @NamedQueries({
+
+        @NamedQuery(
+                name = "addressByUUID",
+                query = "select a from AddressEntity a where a.uuid=:addressUUID")
+
         @NamedQuery(name = "getAddressByUuid", query = "select a from AddressEntity a where a.uuid = :addressUuid"),
+
 })
 public class AddressEntity implements Serializable {
 
@@ -53,17 +73,31 @@ public class AddressEntity implements Serializable {
     @Column(name = "active")
     private Integer active;
 
+
+    public AddressEntity() {}
+
+    public AddressEntity(
+            @Size(max = 200) @NotNull String uuid,
+            @Size(max = 255) String flatBuilNo,
+            @Size(max = 255) String locality,
+            @Size(max = 30) String city,
+            @Size(max = 30) String pincode,
+
     public AddressEntity() {
     }
 
     public AddressEntity(String uuid, String flatBuilNo, String locality, String city, String pincode, StateEntity state, Integer active) {
+
         this.uuid = uuid;
         this.flatBuilNo = flatBuilNo;
         this.locality = locality;
         this.city = city;
         this.pincode = pincode;
         this.state = state;
+
+
         this.active = active;
+
     }
 
     public Integer getId() {
