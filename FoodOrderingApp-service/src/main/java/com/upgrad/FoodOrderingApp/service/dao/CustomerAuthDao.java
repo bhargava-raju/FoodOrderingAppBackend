@@ -10,7 +10,10 @@ import javax.persistence.PersistenceContext;
 @Repository
 public class CustomerAuthDao {
 
-    @PersistenceContext private EntityManager entityManager;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
 
     public CustomerAuthEntity getCustomerAuthByToken(final String accessToken) {
         try {
@@ -21,6 +24,12 @@ public class CustomerAuthDao {
         } catch (NoResultException nre) {
             return null;
         }
+    }
+
+
+//    -----------------------------------------------
+    public void createCustomerAuthToken(CustomerAuthEntity customerAuthEntity) {
+        entityManager.persist(customerAuthEntity);
     }
 
 }

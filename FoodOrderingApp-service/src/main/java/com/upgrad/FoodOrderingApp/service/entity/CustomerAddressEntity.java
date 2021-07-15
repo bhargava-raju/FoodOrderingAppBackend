@@ -15,12 +15,17 @@ import java.io.Serializable;
 @Entity
 @Table(name = "customer_address")
 @NamedQueries({
+
         @NamedQuery(
                 name = "customerAddressByCustomer",
                 query = "select ca FROM CustomerAddressEntity ca where ca.customer = :customer"),
         @NamedQuery(
                 name = "customerAddressByAddress",
                 query = "select ca from CustomerAddressEntity ca where ca.address = :address")
+
+        @NamedQuery(name = "getCustomerAddressByCustomer", query = "select a from CustomerAddressEntity a where a.customer = :customer"),
+        @NamedQuery(name = "getCustomerAddressByAddress", query = "select a from CustomerAddressEntity a where a.address=:address")
+
 })
 public class CustomerAddressEntity implements Serializable {
 
@@ -40,6 +45,11 @@ public class CustomerAddressEntity implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "address_id")
     private AddressEntity address;
+
+
+    public CustomerAddressEntity() {
+    }
+
 
     public Integer getId() {
         return id;
