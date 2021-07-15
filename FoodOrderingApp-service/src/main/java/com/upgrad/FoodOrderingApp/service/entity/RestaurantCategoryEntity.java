@@ -7,10 +7,18 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import org.apache.commons.lang3.builder.*;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import java.io.Serializable;
 
 @Entity
 @Table(name = "restaurant_category")
+
 public class RestaurantCategoryEntity implements Serializable {
 
   @Id
@@ -64,4 +72,5 @@ public class RestaurantCategoryEntity implements Serializable {
   public String toString() {
     return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
   }
+
 }

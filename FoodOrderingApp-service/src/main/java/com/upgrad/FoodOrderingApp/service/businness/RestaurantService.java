@@ -1,5 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.businness;
 
+
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
@@ -17,5 +18,24 @@ public class RestaurantService {
       throw new RestaurantNotFoundException("RNF-001", "No restaurant by this id");
     }
     return restaurant;
-  }
+   }
+
+    public RestaurantEntity restaurantByUUID(String uuid) {
+        return null;
+    }
+
+    public List<RestaurantEntity> restaurantsByName(String uuid) {
+        return null;
+    }
+    public String restaurantByCategory(String uuid) {
+        return "";
+    }
+    public String restaurantsByRating(String uuid) {
+        return "";
+    }
+
+    public RestaurantEntity updateRestaurantRating(RestaurantEntity restaurantEntity, Double rating){
+        return null;
+    }
+
 }

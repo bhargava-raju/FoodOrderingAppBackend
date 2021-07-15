@@ -15,6 +15,7 @@
       <configuration>
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
+
         <datasource-mapping>
           <factory-entry name="FoodOrderingApp-api" value="ca7e86c3-39a2-475e-aa3a-2616524cddc3" />
           <factory-entry name="entityManagerFactory" />
@@ -41,6 +42,12 @@
         </fileset>
       </configuration>
     </facet>
+
+        <datasource-mapping />
+        <naming-strategy-map />
+      </configuration>
+    </facet>
+
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />

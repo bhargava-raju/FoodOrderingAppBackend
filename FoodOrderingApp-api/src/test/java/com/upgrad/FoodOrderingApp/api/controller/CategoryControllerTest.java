@@ -1,3 +1,4 @@
+
 package com.upgrad.FoodOrderingApp.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -140,3 +141,66 @@ public class CategoryControllerTest {
 
 
 }
+gory id field should not be empty"));
+//
+//        mockMvc
+//                .perform(get("/category/emptyString").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+//                .andExpect(status().isNotFound())
+//                .andExpect(jsonPath("code").value("CNF-001"));
+//        verify(mockCategoryService, times(1)).getCategoryById(anyString());
+//    }
+//
+//    //This test case passes when you have handled the exception of trying to fetch any category by its id, while there
+//    // is not category by that id in the database
+//    @Test
+//    public void shouldNotGetCategoryByIdIfCategoryDoesNotExistAgainstGivenId() throws Exception {
+//        when(mockCategoryService.getCategoryById("someCategory"))
+//                .thenThrow(new CategoryNotFoundException("CNF-002", "No category by this id"));
+//
+//        mockMvc
+//                .perform(get("/category/someCategory").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+//                .andExpect(status().isNotFound())
+//                .andExpect(jsonPath("code").value("CNF-002"));
+//        verify(mockCategoryService, times(1)).getCategoryById("someCategory");
+//    }
+//
+//    //This test case passes when you are able to fetch the list of all categories ordered by their name.
+//    @Test
+//    public void shouldGetAllCategoryOrderedByName() throws Exception {
+//        final CategoryEntity categoryEntity = new CategoryEntity();
+//        final String categoryEntityId = UUID.randomUUID().toString();
+//        categoryEntity.setUuid(categoryEntityId);
+//        categoryEntity.setCategoryName("sampleCategoryName");
+//
+//        when(mockCategoryService.getAllCategoriesOrderedByName()).thenReturn(Collections.singletonList(categoryEntity));
+//
+//        final String response = mockMvc
+//                .perform(get("/category").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+//                .andExpect(status().isOk())
+//                .andReturn().getResponse().getContentAsString();
+//
+//        final CategoriesListResponse categoriesListResponse = new ObjectMapper().readValue(response, CategoriesListResponse.class);
+//        assertEquals(categoriesListResponse.getCategories().size(), 1);
+//        assertEquals(categoriesListResponse.getCategories().get(0).getId().toString(), categoryEntityId);
+//        assertEquals(categoriesListResponse.getCategories().get(0).getCategoryName(), "sampleCategoryName");
+//
+//        verify(mockCategoryService, times(1)).getAllCategoriesOrderedByName();
+//    }
+//
+//    @Test
+//    public void shouldNotGetAnyCategoryOrderedByNameIfItDoesNotExists() throws Exception {
+//        when(mockCategoryService.getAllCategoriesOrderedByName()).thenReturn(Collections.emptyList());
+//
+//        final String response = mockMvc
+//                .perform(get("/category").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+//                .andExpect(status().isOk())
+//                .andReturn().getResponse().getContentAsString();
+//
+//        final CategoriesListResponse categoriesListResponse = new ObjectMapper().readValue(response, CategoriesListResponse.class);
+//        assertNull(categoriesListResponse.getCategories());
+//        verify(mockCategoryService, times(1)).getAllCategoriesOrderedByName();
+//    }
+//
+//
+//}
+
