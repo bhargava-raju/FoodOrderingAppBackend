@@ -2,6 +2,13 @@ package com.upgrad.FoodOrderingApp.service.businness;
 
 import com.upgrad.FoodOrderingApp.service.dao.AddressDao;
 import com.upgrad.FoodOrderingApp.service.dao.CustomerAddressDao;
+
+import com.upgrad.FoodOrderingApp.service.entity.*;
+import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.upgrad.FoodOrderingApp.service.dao.StateDao;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAddressEntity;
@@ -17,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Service
 public class AddressService {
@@ -95,10 +103,23 @@ public class AddressService {
         CustomerAddressEntity customerAddressEntity = customerAddressDao.customerAddressByAddress(addressEntity);
         if (addressEntity == null) {
             throw new AddressNotFoundException("ANF-003", "No address by this id)");
+
         }
         if (addressId.isEmpty()) {
             throw new AddressNotFoundException("ANF-005", "Address id can not be empty");
         }
+
+
+        CustomerAddressEntity customerAddressEntity =
+                customerAddressDao.customerAddressByAddress(addressEntity);
+        if (!customerAddressEntity.getCustomer().getUuid().equals(customerEntity.getUuid())) {
+            throw new AuthorizationFailedException(
+                    "ATHR-004", "You are not authorized to view/update/delete any one else's address");
+        }
+        return addressEntity;
+    }
+}
+
         if (!customerAddressEntity.getCustomer().getUuid().equals(customerEntity.getUuid())) {
             throw new AuthorizationFailedException("ATHR-004", "You are not authorized to view/update/delete any one else's address");
         }
@@ -116,4 +137,5 @@ public class AddressService {
         return stateEntityList;
     }
 }
+
 
