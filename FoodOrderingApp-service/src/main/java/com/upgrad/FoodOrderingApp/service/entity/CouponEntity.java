@@ -1,7 +1,5 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
-
-import com.upgrad.FoodOrderingApp.service.common.ItemType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -13,47 +11,45 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "item")
-
+@Table(name = "coupon")
 @NamedQueries({
-  @NamedQuery(name = "itemByUUID", query = "select i from ItemEntity i where i.uuid=:itemUUID"),
+  @NamedQuery(
+      name = "couponByName",
+      query = "select c from CouponEntity c where c.couponName=:couponName"),
+  @NamedQuery(
+      name = "couponByUUID",
+      query = "select c from CouponEntity c where c.uuid=:couponUUID")
 })
-public class ItemEntity implements Serializable {
+public class CouponEntity implements Serializable {
+
   @Id
   @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
+  @Column(name = "uuid", unique = true)
   @NotNull
   @Size(max = 200)
-  @Column(name = "uuid", unique = true)
   private String uuid;
 
+  @Column(name = "coupon_name")
   @NotNull
-  @Size(max = 30)
-  @Column(name = "item_name")
-  private String itemName;
+  @Size(max = 255)
+  private String couponName;
 
+  @Column(name = "percent")
   @NotNull
-  @Column(name = "price")
-  private Integer price;
+  private Integer percent;
 
-  @NotNull
-  @Size(max = 10)
-  @Column(name = "type")
-  private String type;
+  public CouponEntity() {}
 
-  public ItemEntity() {}
-
-  public ItemEntity(
+  public CouponEntity(
       @NotNull @Size(max = 200) String uuid,
-      @NotNull @Size(max = 30) String itemName,
-      @NotNull Integer price,
-      @NotNull @Size(max = 10) String type) {
+      @NotNull @Size(max = 255) String couponName,
+      @NotNull Integer percent) {
     this.uuid = uuid;
-    this.itemName = itemName;
-    this.price = price;
-    this.type = type;
+    this.couponName = couponName;
+    this.percent = percent;
   }
 
   public Integer getId() {
@@ -72,28 +68,20 @@ public class ItemEntity implements Serializable {
     this.uuid = uuid;
   }
 
-  public String getItemName() {
-    return itemName;
+  public String getCouponName() {
+    return couponName;
   }
 
-  public void setItemName(String itemName) {
-    this.itemName = itemName;
+  public void setCouponName(String couponName) {
+    this.couponName = couponName;
   }
 
-  public Integer getPrice() {
-    return price;
+  public Integer getPercent() {
+    return percent;
   }
 
-  public void setPrice(Integer price) {
-    this.price = price;
-  }
-
-  public String getType() {
-    return type;
-  }
-
-  public void setType(ItemType type) {
-    this.type = type.toString();
+  public void setPercent(Integer percent) {
+    this.percent = percent;
   }
 
   @Override

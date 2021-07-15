@@ -1,11 +1,11 @@
-// package com.upgrad.FoodOrderingApp.service.entity;
-
-// public class RestaurantEntity {
-// }
 
 package com.upgrad.FoodOrderingApp.service.entity;
 
-import org.apache.commons.lang3.builder.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,122 +14,142 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "restaurant")
-@NamedQueries(
-        {
-                @NamedQuery(name = "customerByUuid", query = "select c from CustomerEntity c where c.uuid = :uuid"),
-                @NamedQuery(name = "customerById", query = "select c from CustomerEntity c where c.id = :id"),
-                @NamedQuery(name = "customerByContactNumber", query = "select c from CustomerEntity c where c.contactNumber = :contactNumber"),
-                @NamedQuery(name = "customerByEmail", query = "select c from CustomerEntity c where c.email =:email"),
-                //@NamedQuery(name="deleteUser",query = "delete from UserEntity u where u.uuid=:uuid")
-        }
-)
 
-
+@NamedQueries({
+  @NamedQuery(
+      name = "restaurantByUUID",
+      query = "select r from RestaurantEntity r where r.uuid=:uuid"),
+  @NamedQuery(
+      name = "restaurantsByRating",
+      query = "select r from RestaurantEntity r order  by customerRating desc"),
+  @NamedQuery(
+      name = "getRestaurantByName",
+      query =
+          "select r from RestaurantEntity r where lower(restaurantName) like lower(:searchString) "
+              + "order by r.restaurantName asc"),
+  @NamedQuery(
+      name = "restaurantByCategory",
+      query =
+          "Select r from RestaurantEntity r where id in (select rc.restaurantId from RestaurantCategoryEntity rc where rc.categoryId = "
+              + "(select c.id from CategoryEntity c where "
+              + "c.uuid=:categoryUuid) ) order by restaurant_name")
+})
 public class RestaurantEntity implements Serializable {
 
-    @Id
-    @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @Column(name = "id")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @Column(name = "UUID")
-    @NotNull
-    @Size(max = 200)
-    private String uuid;
+  @Column(name = "uuid", unique = true)
+  @NotNull
+  @Size(max = 200)
+  private String uuid;
 
-    @Column(name = "RESTAURANT_NAME")
-    @NotNull
-    @Size(max = 50)
-    private String restaurant_name;
+  @Column(name = "restaurant_name")
+  @NotNull
+  @Size(max = 50)
+  private String restaurantName;
 
-    @Column(name = "PHOTO_URL")
-    @Size(max = 255)
-    private String photo_url;
+  @Column(name = "photo_url")
+  @NotNull
+  @Size(max = 255)
+  private String photoUrl;
 
-    @Column(name = "CUSTOMER_RATING")
-    private float customer_rating;
+  @Column(name = "customer_rating")
+  @NotNull
+  private Double customerRating;
 
-    @Column(name = "AVERAGE_PRICE_FOR_TWO")
-    private Integer average_price_for_two;
+  @Column(name = "average_price_for_two")
+  @NotNull
+  private Integer avgPrice;
 
-    @Column(name = "NUMBER_OF_CUSTOMERS_RATED")
-    private Integer numberOfCustomersRated;
+  @Column(name = "number_of_customers_rated")
+  @NotNull
+  private Integer numberCustomersRated;
 
-    @Column(name = "ADDRESS_ID")
-    private Integer addressId;
+  @ManyToOne
+  @NotNull
+  @JoinColumn(name = "address_id")
+  private AddressEntity address;
 
-    public Integer getId() {
-        return id;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public String getUuid() {
-        return uuid;
-    }
+  public String getUuid() {
+    return uuid;
+  }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
+  public void setUuid(String uuid) {
+    this.uuid = uuid;
+  }
 
-    public String getRestaurant_name() {
-        return restaurant_name;
-    }
+  public String getRestaurantName() {
+    return restaurantName;
+  }
 
-    public void setRestaurant_name(String restaurant_name) {
-        this.restaurant_name = restaurant_name;
-    }
+  public void setRestaurantName(String restaurantName) {
+    this.restaurantName = restaurantName;
+  }
 
-    public String getPhoto_url() {
-        return photo_url;
-    }
+  public String getPhotoUrl() {
+    return photoUrl;
+  }
 
-    public void setPhoto_url(String photo_url) {
-        this.photo_url = photo_url;
-    }
+  public void setPhotoUrl(String photoUrl) {
+    this.photoUrl = photoUrl;
+  }
 
-    public float getCustomer_rating() {
-        return customer_rating;
-    }
+  public Double getCustomerRating() {
+    return customerRating;
+  }
 
-    public void setCustomer_rating(float customer_rating) {
-        this.customer_rating = customer_rating;
-    }
+  public void setCustomerRating(Double customerRating) {
+    this.customerRating = customerRating;
+  }
 
-    public Integer getAverage_price_for_two() {
-        return average_price_for_two;
-    }
+  public Integer getAvgPrice() {
+    return avgPrice;
+  }
 
-    public void setAverage_price_for_two(Integer average_price_for_two) {
-        this.average_price_for_two = average_price_for_two;
-    }
+  public void setAvgPrice(Integer averagePriceForTwo) {
+    this.avgPrice = averagePriceForTwo;
+  }
 
-    public Integer getNumberOfCustomersRated() {
-        return numberOfCustomersRated;
-    }
+  public Integer getNumberCustomersRated() {
+    return numberCustomersRated;
+  }
 
-    public void setNumberOfCustomersRated(Integer numberOfCustomersRated) {
-        this.numberOfCustomersRated = numberOfCustomersRated;
-    }
+  public void setNumberCustomersRated(Integer numberOfCustomersRated) {
+    this.numberCustomersRated = numberOfCustomersRated;
+  }
 
-    public Integer getAddressId() {
-        return addressId;
-    }
+  public AddressEntity getAddress() {
+    return address;
+  }
 
-    public void setAddressId(Integer addressId) {
-        this.addressId = addressId;
-    }
+  public void setAddress(AddressEntity address) {
+    this.address = address;
+  }
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(this).hashCode();
-    }
+  @Override
+  public boolean equals(Object obj) {
+    return new EqualsBuilder().append(this, obj).isEquals();
+  }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
-    }
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder().append(this).hashCode();
+  }
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+  }
 
 }
