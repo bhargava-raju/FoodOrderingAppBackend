@@ -1,6 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.dao;
 
-import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthTokenEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import org.springframework.stereotype.Repository;
 
@@ -51,7 +51,7 @@ public class CustomerDao {
     }
 
     // Creates auth token by persisting the record in the database
-    public CustomerAuthEntity createAuthToken(final CustomerAuthEntity customerAuthEntity) {
+    public CustomerAuthTokenEntity createAuthToken(final CustomerAuthTokenEntity customerAuthEntity) {
         entityManager.persist(customerAuthEntity);
         return customerAuthEntity;
     }
@@ -62,7 +62,7 @@ public class CustomerDao {
     }
 
     //
-    public void updateCustomerAuth(final CustomerAuthEntity customerAuthEntity) {
+    public void updateCustomerAuth(final CustomerAuthTokenEntity customerAuthEntity) {
         entityManager.merge(customerAuthEntity);
     }
 
@@ -71,18 +71,18 @@ public class CustomerDao {
         return customerEntity;
     }
 
-    public CustomerAuthEntity getCustomerAuthToken(final String accessToken) {
+    public CustomerAuthTokenEntity getCustomerAuthToken(final String accessToken) {
         try {
-            return entityManager.createNamedQuery("customerAuthTokenByAccessToken", CustomerAuthEntity.class)
+            return entityManager.createNamedQuery("customerAuthTokenByAccessToken", CustomerAuthTokenEntity.class)
                     .setParameter("accessToken", accessToken).getSingleResult();
         } catch(NoResultException nre) {
             return null;
         }
     }
 
-    public CustomerAuthEntity getCustomerAuthTokenById(final Long customerId) {
+    public CustomerAuthTokenEntity getCustomerAuthTokenById(final Long customerId) {
         try {
-            return entityManager.createNamedQuery("customerAuthTokenById", CustomerAuthEntity.class)
+            return entityManager.createNamedQuery("customerAuthTokenById", CustomerAuthTokenEntity.class)
                     .setParameter("customer", customerId).getSingleResult();
         } catch(NoResultException nre) {
             return null;

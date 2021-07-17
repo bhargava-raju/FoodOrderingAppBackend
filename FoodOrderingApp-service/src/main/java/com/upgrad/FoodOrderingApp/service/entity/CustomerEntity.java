@@ -1,23 +1,11 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import org.apache.commons.lang3.builder.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-
-import java.util.ArrayList;
-import java.util.List;
-
-
-
 
 @Entity
 @Table(name = "customer")
@@ -73,13 +61,6 @@ public class CustomerEntity implements Serializable {
     @ToStringExclude
     private String salt;
 
-    @OneToMany
-    @JoinTable(
-            name = "customer_address",
-            joinColumns = @JoinColumn(name = "customer_id"),
-            inverseJoinColumns = @JoinColumn(name = "address_id"))
-    private List<AddressEntity> addresses = new ArrayList<>();
-
     public Integer getId() {
         return id;
     }
@@ -95,7 +76,6 @@ public class CustomerEntity implements Serializable {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
-
 
     public String getFirstName() {
         return firstName;
@@ -119,7 +99,6 @@ public class CustomerEntity implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-
     }
 
     public String getContactNumber() {
@@ -138,27 +117,12 @@ public class CustomerEntity implements Serializable {
         this.password = password;
     }
 
-
     public String getSalt() {
         return salt;
     }
 
     public void setSalt(String salt) {
         this.salt = salt;
-    }
-
-
-    public List<AddressEntity> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(List<AddressEntity> addresses) {
-        this.addresses = addresses;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return new EqualsBuilder().append(this, obj).isEquals();
     }
 
     @Override
