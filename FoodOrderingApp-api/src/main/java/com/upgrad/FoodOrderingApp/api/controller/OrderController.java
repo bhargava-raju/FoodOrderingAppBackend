@@ -156,7 +156,7 @@ public class OrderController {
         OrderListCustomer orderListCustomer = new OrderListCustomer();
         orderListCustomer.setId(UUID.fromString(customer.getUuid()));
         orderListCustomer.setFirstName(customer.getFirstName());
-        orderListCustomer.setEmailAddress(customer.getEmailAddress());
+        orderListCustomer.setEmailAddress(customer.getEmail());
         orderListCustomer.setContactNumber(customer.getContactNumber());
         orderListCustomer.setLastName(customer.getLastName());
         return orderListCustomer;
