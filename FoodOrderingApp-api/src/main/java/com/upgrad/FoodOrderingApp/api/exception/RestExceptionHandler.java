@@ -100,7 +100,6 @@ public class RestExceptionHandler {
         new ErrorResponse().code(exception.getCode()).message(exception.getErrorMessage()),
         HttpStatus.BAD_REQUEST);
   }
-}
 
     @ExceptionHandler(SignUpRestrictedException.class)
     public ResponseEntity<ErrorResponse> signUpRestrictedException(SignUpRestrictedException exc, WebRequest request) {

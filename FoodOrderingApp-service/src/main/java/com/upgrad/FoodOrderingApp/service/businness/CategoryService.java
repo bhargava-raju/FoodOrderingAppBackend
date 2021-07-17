@@ -35,4 +35,7 @@ public class CategoryService {
         return categoryEntities;
     }
 
+    public Object getCategoriesByRestaurant(String someRestaurantId) {
+        return null;
+    }
 }

@@ -78,10 +78,10 @@ public class RestaurantService {
         }
 
         // Now calculate new customer rating  and set the updated rating and attach it to the restaurantEntity
-        BigDecimal oldRatingCalculation = (restaurantEntity.getCustomerRating().multiply(new BigDecimal(restaurantEntity.getNumCustomersRated())));
-        BigDecimal calculatedRating = (oldRatingCalculation.add(new BigDecimal(customerRating))).divide(new BigDecimal(restaurantEntity.getNumCustomersRated() + 1));
-        restaurantEntity.setCustomerRating(calculatedRating);
-        restaurantEntity.setNumCustomersRated(restaurantEntity.getNumCustomersRated() + 1);
+        BigDecimal oldRatingCalculation = (new BigDecimal((restaurantEntity.getCustomerRating())).multiply(new BigDecimal(restaurantEntity.getNumberCustomersRated())));
+        BigDecimal calculatedRating = (oldRatingCalculation.add(new BigDecimal(customerRating))).divide(new BigDecimal(restaurantEntity.getNumberCustomersRated() + 1));
+        restaurantEntity.setCustomerRating(calculatedRating.doubleValue());
+        restaurantEntity.setNumberCustomersRated(restaurantEntity.getNumberCustomersRated() + 1);
 
         //called restaurantDao to merge the content and update in the database
         restaurantDao.updateRestaurant(restaurantEntity);

@@ -20,6 +20,10 @@ public class ItemService {
     }
     return item;
   }
+
+    public Object getItemsByCategoryAndRestaurant(String someRestaurantId, String uuid) {
+     return null;
+    }
 }
 
 
