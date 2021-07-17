@@ -1,23 +1,10 @@
 package com.upgrad.FoodOrderingApp.service.businness;
 
-
-
-import com.upgrad.FoodOrderingApp.service.dao.CustomerAuthDao;
-
 import com.upgrad.FoodOrderingApp.service.dao.CustomerDao;
-import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthTokenEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.ZonedDateTime;
-import java.util.UUID;
-
 import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
 import com.upgrad.FoodOrderingApp.service.exception.UpdateCustomerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,80 +14,10 @@ import javax.transaction.Transactional;
 import java.time.ZonedDateTime;
 import java.util.regex.Pattern;
 
-
-
 @Service
 public class CustomerService {
 
-
-    @Autowired private CustomerAuthDao cusAuthDao;
-
-    public CustomerEntity getCustomer(String accessToken) throws AuthorizationFailedException {
-        CustomerAuthEntity customerAuthEntity = cusAuthDao.getCustomerAuthByToken(accessToken);
-
     @Autowired
-    private CustomerAuthDao customerAuthDao;
-
-    @Autowired
-    private CustomerDao customerDao;
-
-    public CustomerEntity getCustomer(String accessToken) throws AuthorizationFailedException {
-        CustomerAuthEntity customerAuthEntity = customerAuthDao.getCustomerAuthByToken(accessToken);
-
-        if (customerAuthEntity != null) {
-
-            if (customerAuthEntity.getLogoutAt() != null) {
-                throw new AuthorizationFailedException(
-                        "ATHR-002", "Customer is logged out. Log in again to access this endpoint.");
-            }
-
-            if (ZonedDateTime.now().isAfter(customerAuthEntity.getExpiresAt())) {
-                throw new AuthorizationFailedException(
-                        "ATHR-003", "Your session is expired. Log in again to access this endpoint.");
-            }
-            return customerAuthEntity.getCustomer();
-        } else {
-            throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in.");
-        }
-    }
-
-
-//    ----------------------
-
-    @Transactional(propagation = Propagation.REQUIRED)
-    public CustomerAuthEntity authenticate(String username, String password)
-            throws AuthenticationFailedException {
-
-        CustomerEntity customerEntity = customerDao.getCustomerByContactNumber(username);
-        System.out.println(customerEntity);
-        if (customerEntity == null) {
-            throw new AuthenticationFailedException(
-                    "ATH-001", "This contact number has not been registered!");
-        }
-        final String encryptedPassword =
-                PasswordCryptographyProvider.encrypt(password, customerEntity.getSalt());
-
-        System.out.println(encryptedPassword);
-        System.out.println("customer password" + customerEntity.getPassword());
-
-//        if (!encryptedPassword.equals(customerEntity.getPassword())) {
-//            throw new AuthenticationFailedException("ATH-002", "Invalid Credentials");
-//        }
-        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
-        CustomerAuthEntity customerAuthEntity = new CustomerAuthEntity();
-        customerAuthEntity.setUuid(UUID.randomUUID().toString());
-        customerAuthEntity.setCustomer(customerEntity);
-        final ZonedDateTime now = ZonedDateTime.now();
-        final ZonedDateTime expiresAt = now.plusHours(8);
-        customerAuthEntity.setLoginAt(now);
-        customerAuthEntity.setExpiresAt(expiresAt);
-        String accessToken = jwtTokenProvider.generateToken(customerEntity.getUuid(), now, expiresAt);
-        customerAuthEntity.setAccessToken(accessToken);
-        customerAuthDao.createCustomerAuthToken(customerAuthEntity);
-        return customerAuthEntity;
-    }
-
-
     private CustomerDao customerDao;
 
     @Autowired
@@ -112,7 +29,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public CustomerEntity saveCustomer(CustomerEntity customerEntity) throws SignUpRestrictedException {
+    public CustomerEntity signup(CustomerEntity customerEntity) throws SignUpRestrictedException {
 
         // Regular expression for email format
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." + "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-z" + "A-Z]{2,7}$";
@@ -152,7 +69,7 @@ public class CustomerService {
 
 
     @Transactional
-    public CustomerAuthEntity authenticate(final String contactNumber , final String password) throws AuthenticationFailedException {
+    public CustomerAuthTokenEntity authenticate(final String contactNumber , final String password) throws AuthenticationFailedException {
         //Call the getCustomerByContactNumber method in CustomerDao class for CustomerDao object and pass contactNumber as argument
         // Receive the value returned by getCustomerByContactNumber() method in CustomerEntity type object(name it as customerEntity)
         CustomerEntity customerEntity = customerDao.getCustomerByContactNumber(contactNumber);
@@ -173,26 +90,26 @@ public class CustomerService {
         if(encryptedPassword.equals(customerEntity.getPassword())) {
             //Implementation of JwtTokenProvider class
             JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
-            //Now CustomerAuthEntity type object is to be persisted in a database
-            //Declaring an object customerAuthEntity of type CustomerAuthEntity and setting its attributes
-            CustomerAuthEntity customerAuthEntity = new CustomerAuthEntity();
-            customerAuthEntity.setCustomer(customerEntity);
+            //Now CustomerAuthTokenEntity type object is to be persisted in a database
+            //Declaring an object customerAuthTokenEntity of type CustomerAuthTokenEntity and setting its attributes
+            CustomerAuthTokenEntity customerAuthTokenEntity = new CustomerAuthTokenEntity();
+            customerAuthTokenEntity.setCustomer(customerEntity);
             final ZonedDateTime now = ZonedDateTime.now();
             final ZonedDateTime expiresAt = now.plusHours(8);
 
-            customerAuthEntity.setAccessToken(jwtTokenProvider.generateToken(customerAuthEntity.getUuid(), now, expiresAt));
+            customerAuthTokenEntity.setAccessToken(jwtTokenProvider.generateToken(customerAuthTokenEntity.getUuid(), now, expiresAt));
 
-            customerAuthEntity.setLoginAt(now);
-            customerAuthEntity.setExpiresAt(expiresAt);
-            customerAuthEntity.setUuid(customerEntity.getUuid());
+            customerAuthTokenEntity.setLoginAt(now);
+            customerAuthTokenEntity.setExpiresAt(expiresAt);
+            customerAuthTokenEntity.setUuid(customerEntity.getUuid());
 
             //Call the createAuthToken() method in CustomerDao class for customerDao
-            //Pass customerAuthEntity as an argument
-            customerDao.createAuthToken(customerAuthEntity);
+            //Pass customerAuthTokenEntity as an argument
+            customerDao.createAuthToken(customerAuthTokenEntity);
 
             //updateCustomer() method in CustomerDao class calls the merge() method to update the customerEntity
             customerDao.updateCustomer(customerEntity);
-            return customerAuthEntity;
+            return customerAuthTokenEntity;
 
         }
         else{
@@ -207,13 +124,13 @@ public class CustomerService {
             throws AuthorizationFailedException, UpdateCustomerException {
 
         //get the customerAuthToken details from customerDao
-        CustomerAuthEntity customerAuthEntity = getCustomer(authorizationToken);
+        CustomerAuthTokenEntity customerAuthTokenEntity = customerDao.getCustomerAuthToken(authorizationToken);
 
         // Validates the provided access token
         validateAccessToken(authorizationToken);
 
         //get the customer Details using the customerUuid
-        CustomerEntity customerEntity =  customerDao.getCustomerByUuid(customerAuthEntity.getUuid());
+        CustomerEntity customerEntity =  customerDao.getCustomerByUuid(customerAuthTokenEntity.getUuid());
 
         // Throws UpdateCustomerException if firstname is updated to null
         if (updatedCustomerEntity.getFirstName() == null) {
@@ -237,13 +154,13 @@ public class CustomerService {
         final ZonedDateTime now = ZonedDateTime.now();
 
         //get the customerAuthToken details from customerDao
-        CustomerAuthEntity customerAuthEntity = getCustomer(authorizationToken);
+        CustomerAuthTokenEntity customerAuthTokenEntity = customerDao.getCustomerAuthToken(authorizationToken);
 
         // Validates the provided access token
         validateAccessToken(authorizationToken);
 
         //get the customer Details using the customerUuid
-        CustomerEntity customerEntity =  customerDao.getCustomerByUuid(customerAuthEntity.getUuid());
+        CustomerEntity customerEntity =  customerDao.getCustomerByUuid(customerAuthTokenEntity.getUuid());
 
         // Throws UpdateCustomerException if either old password or new password is null
         if (oldPassword == null || newPassword ==  null) {
@@ -282,10 +199,10 @@ public class CustomerService {
     }
 
     @Transactional
-    public CustomerAuthEntity logout (final String authorizationToken) throws AuthorizationFailedException {
+    public CustomerAuthTokenEntity logout (final String authorizationToken) throws AuthorizationFailedException {
 
-        // Gets the customerAuthEntity with the provided authorizationToken
-        CustomerAuthEntity customerAuthEntity = getCustomer(authorizationToken);
+        // Gets the customerAuthTokenEntity with the provided authorizationToken
+        CustomerAuthTokenEntity customerAuthTokenEntity = customerDao.getCustomerAuthToken(authorizationToken);
 
         // Gets the current time
         final ZonedDateTime now = ZonedDateTime.now();
@@ -294,41 +211,43 @@ public class CustomerService {
         validateAccessToken(authorizationToken);
 
         // Sets the logout time to now
-        customerAuthEntity.setLogoutAt(now);
+        customerAuthTokenEntity.setLogoutAt(now);
 
         // Calls customerDao to update the customer logout details in the database
-        customerDao.updateCustomerAuth(customerAuthEntity);
-        return customerAuthEntity;
+        customerDao.updateCustomerAuth(customerAuthTokenEntity);
+        return customerAuthTokenEntity;
     }
 
     @Transactional
     public void validateAccessToken(final String authorizationToken) throws AuthorizationFailedException{
 
         //get the customerAuthToken details from customerDao
-        CustomerAuthEntity customerAuthEntity = customerDao.getCustomerAuthToken(authorizationToken);
+        CustomerAuthTokenEntity customerAuthTokenEntity = customerDao.getCustomerAuthToken(authorizationToken);
 
         // Gets the current time
         final ZonedDateTime now = ZonedDateTime.now();
 
         // Throw AuthorizationFailedException if the customer is not authorized
-        if (customerAuthEntity == null) {
+        if (customerAuthTokenEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in.");
             // Throw AuthorizationFailedException if the customer is logged out
-        } else if (customerAuthEntity.getLogoutAt() != null) {
+        } else if (customerAuthTokenEntity.getLogoutAt() != null) {
             throw new AuthorizationFailedException("ATHR-002", "Customer is logged out. Log in again to access this endpoint.");
             // Throw AuthorizationFailedException if the customer session is expired
-        } else if (now.isAfter(customerAuthEntity.getExpiresAt()) ) {
+        } else if (now.isAfter(customerAuthTokenEntity.getExpiresAt()) ) {
             throw new AuthorizationFailedException("ATHR-003", "Your session is expired. Log in again to access this endpoint.");
         }
 
     }
 
+//    @Transactional
+//    public CustomerAuthTokenEntity getCustomerAuthToken(final String accessToken) {
+//        // Calls customerDao to get the access token of the customer from the database
+//        return customerDao.getCustomerAuthToken(accessToken);
+//    }
     @Transactional
-    public CustomerAuthEntity getCustomer(final String accessToken) {
+    public CustomerEntity getCustomer(String accessToken) {
         // Calls customerDao to get the access token of the customer from the database
-        return customerDao.getCustomerAuthToken(accessToken);
+        return customerDao.getCustomerAuthToken(accessToken).getCustomer();
     }
-
-
-
 }

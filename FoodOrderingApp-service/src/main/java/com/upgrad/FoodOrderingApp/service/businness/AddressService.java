@@ -109,22 +109,13 @@ public class AddressService {
             throw new AddressNotFoundException("ANF-005", "Address id can not be empty");
         }
 
-
-        CustomerAddressEntity customerAddressEntity =
-                customerAddressDao.customerAddressByAddress(addressEntity);
         if (!customerAddressEntity.getCustomer().getUuid().equals(customerEntity.getUuid())) {
             throw new AuthorizationFailedException(
                     "ATHR-004", "You are not authorized to view/update/delete any one else's address");
         }
         return addressEntity;
     }
-}
 
-        if (!customerAddressEntity.getCustomer().getUuid().equals(customerEntity.getUuid())) {
-            throw new AuthorizationFailedException("ATHR-004", "You are not authorized to view/update/delete any one else's address");
-        }
-        return addressEntity;
-    }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public AddressEntity deleteAddress(final AddressEntity addressEntity) {
