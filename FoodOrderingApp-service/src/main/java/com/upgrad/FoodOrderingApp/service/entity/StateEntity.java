@@ -1,6 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
+import javax.persistence.*;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -9,113 +9,41 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import javax.validation.constraints.Size;
+import java.util.UUID;
 
 @Entity
 @Table(name = "state")
-@NamedQueries({
+@NamedQueries(
+        {
+                @NamedQuery(name = "allStates", query = "select s from StateEntity s"),
+                @NamedQuery(name = "stateByUuid",query="select s from StateEntity s where s.uuid=:uuid"),
+                @NamedQuery(name = "stateById", query = "select s from StateEntity s where s.id=:id")
 
-  @NamedQuery(
-      name = "getStateByUuid",
-      query = "select s from StateEntity s where s.uuid=:stateUuid"),
-  @NamedQuery(name = "getAllStates", query = "select s from StateEntity s")
-})
-public class StateEntity implements Serializable {
+        }
+)
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id")
-  private Integer id;
-
-  @Size(max = 200)
-  @NotNull
-  @Column(name = "uuid", unique = true)
-  private String uuid;
-
-  @Size(max = 30)
-  @Column(name = "state_name")
-  private String stateName;
-
-  public StateEntity() {}
-
-  public StateEntity(
-      @NotNull @Size(max = 200) String uuid, @NotNull @Size(max = 30) String stateName) {
-    this.uuid = uuid;
-    this.stateName = stateName;
-  }
-
-  public Integer getId() {
-    return id;
-  }
-
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public String getUuid() {
-    return uuid;
-  }
-
-  public void setUuid(String uuid) {
-    this.uuid = uuid;
-  }
-
-  public String getStateName() {
-    return stateName;
-  }
-
-  public void setStateName(String stateName) {
-    this.stateName = stateName;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    return new EqualsBuilder().append(this, obj).isEquals();
-  }
-
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder().append(this).hashCode();
-  }
-
-  @Override
-  public String toString() {
-    return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
-  }
-}
-
-        @NamedQuery(name = "StateByUuid", query = "select s from StateEntity s where s.uuid = :uuid"),
-        @NamedQuery(name = "getAllStates", query = "select  s from StateEntity  s")
-})
 public class StateEntity implements Serializable {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Size(max = 200)
+    @Column(name = "UUID")
     @NotNull
-    @Column(name = "uuid", unique = true)
+    @Size(max = 200)
     private String uuid;
 
-    public StateEntity(String uuid, String stateName) {
-        this.uuid = uuid;
-        this.stateName = stateName;
-    }
-
-    @Column(name = "state_name")
+    @Column(name = "STATE_NAME")
     @Size(max = 30)
     private String stateName;
 
-    public StateEntity() {
-    }
-
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -131,13 +59,8 @@ public class StateEntity implements Serializable {
         return stateName;
     }
 
-    public void setStateName(String state_name) {
-        this.stateName = state_name;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return new EqualsBuilder().append(this, obj).isEquals();
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
     }
 
     @Override
@@ -149,7 +72,5 @@ public class StateEntity implements Serializable {
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
+
 }
-
-
-

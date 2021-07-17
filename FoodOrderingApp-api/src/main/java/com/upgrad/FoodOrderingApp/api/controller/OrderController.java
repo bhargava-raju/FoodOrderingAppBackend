@@ -45,7 +45,7 @@ public class OrderController {
     public ResponseEntity<CouponDetailsResponse> getCouponByName(@RequestHeader("authorization") final String authorization,
             @PathVariable("coupon_name") final String couponName) throws AuthorizationFailedException, CouponNotFoundException {
 
-        String accessToken = Utility.getTokenFromAuthorization(authorization);
+        String accessToken = Utility.getAccessTokenFromAuthorization(authorization);
 
         customerService.getCustomer(accessToken);
 
@@ -64,7 +64,7 @@ public class OrderController {
     public ResponseEntity<CustomerOrderResponse> getPastOrdersByUser(@RequestHeader("authorization") final String authorization)
             throws AuthorizationFailedException {
 
-        String accessToken = Utility.getTokenFromAuthorization(authorization);
+        String accessToken = Utility.getAccessTokenFromAuthorization(authorization);
 
         CustomerEntity customerEntity = customerService.getCustomer(accessToken);
 
@@ -97,7 +97,7 @@ public class OrderController {
             @RequestBody(required = true) SaveOrderRequest saveOrderRequest)
             throws AuthorizationFailedException, CouponNotFoundException, AddressNotFoundException,
             PaymentMethodNotFoundException, RestaurantNotFoundException, ItemNotFoundException {
-        String accessToken = Utility.getTokenFromAuthorization(authorization);
+        String accessToken = Utility.getAccessTokenFromAuthorization(authorization);
 
 
         CustomerEntity customerEntity = customerService.getCustomer(accessToken);
@@ -156,7 +156,7 @@ public class OrderController {
         OrderListCustomer orderListCustomer = new OrderListCustomer();
         orderListCustomer.setId(UUID.fromString(customer.getUuid()));
         orderListCustomer.setFirstName(customer.getFirstName());
-        orderListCustomer.setEmailAddress(customer.getEmailAddress());
+        orderListCustomer.setEmailAddress(customer.getEmail());
         orderListCustomer.setContactNumber(customer.getContactNumber());
         orderListCustomer.setLastName(customer.getLastName());
         return orderListCustomer;
