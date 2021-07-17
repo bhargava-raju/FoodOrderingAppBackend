@@ -19,13 +19,12 @@ public class PaymentService {
     private PaymentDao paymentDao;
 
     public PaymentEntity getPaymentByUUID(String paymentUUID) throws PaymentMethodNotFoundException {
-        PaymentEntity payment = paymentDao.getPaymentByUUID(paymentUUID);
-        if (payment == null) {
-            throw new PaymentMethodNotFoundException("PNF-002", "No payment method found by this id");
-        } else {
-            return payment;
-        }
-    }
+      PaymentEntity payment = paymentDao.getPaymentByUUID(paymentUUID);
+      if (payment == null) {
+        throw new PaymentMethodNotFoundException("PNF-002", "No payment method found by this id");
+      }else {
+        return payment;
+      }
 
     @Transactional(propagation = Propagation.REQUIRED)
     public List<PaymentEntity> getPaymentMethods() {
@@ -41,8 +40,8 @@ public class PaymentService {
         if (paymentEntity == null) {
             throw new PaymentMethodNotFoundException("PNF-002", "No payment method found by this id");
         }
+
         return paymentEntity;
 
     }
 }
-

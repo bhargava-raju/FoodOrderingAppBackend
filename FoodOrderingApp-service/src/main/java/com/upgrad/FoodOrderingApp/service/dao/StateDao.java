@@ -14,30 +14,20 @@ public class StateDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public StateEntity getStateById(final Long stateId) {
+    public StateEntity getStateByUuid(final String uuid) {
         try {
-            return entityManager.createNamedQuery("stateById", StateEntity.class).setParameter("id", stateId)
-                    .getSingleResult();
-        } catch(NoResultException nre) {
-            return null;
-        }
-    }
-
-    public StateEntity getStateByUuid(final String stateUuid) {
-        try {
-            return entityManager.createNamedQuery("stateByUuid", StateEntity.class).setParameter("uuid", stateUuid)
-                    .getSingleResult();
-        } catch(NoResultException nre) {
+            return entityManager.createNamedQuery("StateByUuid", StateEntity.class).setParameter("uuid", uuid).getSingleResult();
+        } catch (NoResultException nre) {
             return null;
         }
     }
 
     public List<StateEntity> getAllStates() {
         try {
-            return entityManager.createNamedQuery("allStates", StateEntity.class).getResultList();
+            return entityManager.createNamedQuery("getAllStates", StateEntity.class).getResultList();
         } catch (NoResultException nre) {
             return null;
         }
     }
-
 }
+
