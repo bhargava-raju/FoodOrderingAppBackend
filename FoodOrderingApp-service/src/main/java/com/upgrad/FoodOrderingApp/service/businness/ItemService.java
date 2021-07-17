@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ItemService {
 
-  @Autowired private ItemDao itemDao;
+  @Autowired
+  private ItemDao itemDao;
 
   public ItemEntity getItemByUUID(String itemUUID) throws ItemNotFoundException {
     ItemEntity item = itemDao.getItemByUUID(itemUUID);
@@ -19,5 +20,6 @@ public class ItemService {
     }
     return item;
   }
+}
 
 

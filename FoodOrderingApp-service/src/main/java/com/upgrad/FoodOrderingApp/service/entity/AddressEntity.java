@@ -32,7 +32,7 @@ import java.io.Serializable;
 
         @NamedQuery(
                 name = "addressByUUID",
-                query = "select a from AddressEntity a where a.uuid=:addressUUID")
+                query = "select a from AddressEntity a where a.uuid=:addressUUID"),
 
         @NamedQuery(name = "getAddressByUuid", query = "select a from AddressEntity a where a.uuid = :addressUuid"),
 
@@ -75,16 +75,6 @@ public class AddressEntity implements Serializable {
 
 
     public AddressEntity() {}
-
-    public AddressEntity(
-            @Size(max = 200) @NotNull String uuid,
-            @Size(max = 255) String flatBuilNo,
-            @Size(max = 255) String locality,
-            @Size(max = 30) String city,
-            @Size(max = 30) String pincode,
-
-    public AddressEntity() {
-    }
 
     public AddressEntity(String uuid, String flatBuilNo, String locality, String city, String pincode, StateEntity state, Integer active) {
 
