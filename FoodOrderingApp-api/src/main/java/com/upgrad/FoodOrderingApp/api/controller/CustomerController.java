@@ -3,6 +3,7 @@ package com.upgrad.FoodOrderingApp.api.controller;
 import com.upgrad.FoodOrderingApp.api.model.*;
 import com.upgrad.FoodOrderingApp.service.businness.CustomerService;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
+import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthTokenEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
 import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
@@ -76,7 +77,7 @@ public class CustomerController {
         String[] decodedArray = decodedText.split(":");
 
         // Authenticates the username and password and gets the customer auth token
-        CustomerAuthEntity customerAuthToken = customerService.authenticate(decodedArray[0] , decodedArray[1]);
+        CustomerAuthTokenEntity customerAuthToken = customerService.authenticate(decodedArray[0] , decodedArray[1]);
 
         // Gets the customer details based on auth token
         CustomerEntity customer = customerAuthToken.getCustomer();
@@ -105,7 +106,7 @@ public class CustomerController {
         String[] bearerToken = authorization.split( "Bearer ");
 
         // Calls the logout method by passing the bearer token
-        final CustomerAuthEntity customerAuthEntity = customerService.logout(bearerToken[1]);
+        final CustomerAuthTokenEntity customerAuthEntity = customerService.logout(bearerToken[1]);
 
         // Gets the details of the customer based on received access token
         CustomerEntity customerEntity = customerAuthEntity.getCustomer();
