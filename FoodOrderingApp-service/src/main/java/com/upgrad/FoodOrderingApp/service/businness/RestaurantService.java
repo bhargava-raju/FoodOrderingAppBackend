@@ -37,22 +37,22 @@ public class RestaurantService {
     }
 
     // A Method which takes the restaurantName as parameter for  getRestaurantsByName endpoint
-    public List<RestaurantEntity> getRestaurantsByName(String restaurantName) {
+    public List<RestaurantEntity> restaurantsByName(String restaurantName) {
         return restaurantDao.getRestaurantsByName(restaurantName);
     }
 
     // A Method which takes the categoryUUID as parameter for  getRestaurantByCategoryId endpoint
-    public List<RestaurantCategoryEntity> getRestaurantByCategoryId(final Long categoryID) {
+    public List<RestaurantCategoryEntity> restaurantByCategory(final Long categoryID) {
         return restaurantDao.getRestaurantByCategoryId(categoryID);
     }
 
     // A Method which takes the restaurantUUID as parameter for  getRestaurantByUUId endpoint
-    public RestaurantEntity getRestaurantByUUId(String restaurantUUID) {
+    public RestaurantEntity restaurantByUUID(String restaurantUUID) {
         return restaurantDao.getRestaurantByUUId(restaurantUUID);
     }
 
     @Transactional
-    public RestaurantEntity updateCustomerRating (final Double customerRating, final String restaurant_id, final String authorizationToken)
+    public RestaurantEntity updateRestaurantRating (final Double customerRating, final String restaurant_id, final String authorizationToken)
             throws AuthorizationFailedException, RestaurantNotFoundException, InvalidRatingException {
 
         final ZonedDateTime now = ZonedDateTime.now();
@@ -88,4 +88,8 @@ public class RestaurantService {
         return restaurantEntity;
     }
 
+
+    public Object restaurantsByRating() {
+        return null;
+    }
 }
