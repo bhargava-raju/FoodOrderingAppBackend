@@ -4,7 +4,7 @@ import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException
 
 public class Utility {
 
-    public static String getAccessTokenFromAuthorization(String authorization)
+    public static String getTokenFromAuthorization(String authorization)
             throws AuthorizationFailedException {
         String[] authParts = authorization.split("Bearer ");
         if (authParts.length != 2) {

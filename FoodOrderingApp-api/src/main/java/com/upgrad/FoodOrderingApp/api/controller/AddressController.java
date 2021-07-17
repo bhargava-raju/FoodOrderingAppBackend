@@ -35,7 +35,7 @@ public class AddressController {
     @RequestMapping(path = "address", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SaveAddressResponse> saveAddress(@RequestBody(required = false) final SaveAddressRequest saveAddressRequest, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, AddressNotFoundException, SaveAddressException {
 
-        final String accessToken = Utility.getAccessTokenFromAuthorization(authorization);
+        final String accessToken = Utility.getTokenFromAuthorization(authorization);
         CustomerEntity customerEntity = customerService.getCustomer(accessToken);
         AddressEntity addressEntity = new AddressEntity();
 
@@ -67,7 +67,7 @@ public class AddressController {
     public ResponseEntity<AddressListResponse> getAllSavedAddresses(@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
         final AddressListResponse addressListResponse = new AddressListResponse();
         //Method to verify access-token
-        final String accessToken = Utility.getAccessTokenFromAuthorization(authorization);
+        final String accessToken = Utility.getTokenFromAuthorization(authorization);
         CustomerEntity customerEntity = customerService.getCustomer(accessToken);
         final List<AddressEntity> addressEntityList = addressService.getAllAddress(customerEntity);
 
@@ -92,7 +92,7 @@ public class AddressController {
     @RequestMapping(path = "address/{address_id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<DeleteAddressResponse> deleteSavedAddress(@PathVariable("address_id") final String addressId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, AddressNotFoundException {
 
-        final String accessToken = Utility.getAccessTokenFromAuthorization(authorization);
+        final String accessToken = Utility.getTokenFromAuthorization(authorization);
         CustomerEntity customerEntity = customerService.getCustomer(accessToken);
         final AddressEntity addressEntity = addressService.getAddressByUUID(addressId, customerEntity);
         final AddressEntity deletedAddressEntity = new AddressEntity();

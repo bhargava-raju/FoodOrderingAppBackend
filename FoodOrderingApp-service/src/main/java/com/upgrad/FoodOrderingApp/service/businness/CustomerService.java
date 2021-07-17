@@ -250,4 +250,8 @@ public class CustomerService {
         // Calls customerDao to get the access token of the customer from the database
         return customerDao.getCustomerAuthToken(accessToken).getCustomer();
     }
+
+    public CustomerEntity saveCustomer(CustomerEntity customerEntity) {
+        return null;
+    }
 }
