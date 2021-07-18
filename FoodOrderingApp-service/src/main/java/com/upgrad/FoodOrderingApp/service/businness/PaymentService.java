@@ -17,8 +17,8 @@ public class PaymentService {
     private PaymentDao paymentDao;
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public List<PaymentEntity> getPaymentMethods() {
-        List<PaymentEntity> paymentEntityList = paymentDao.getPaymentMethods();
+    public List<PaymentEntity> getAllPaymentMethods() {
+        List<PaymentEntity> paymentEntityList = paymentDao.getAllPaymentMethods();
         return paymentEntityList;
     }
 
